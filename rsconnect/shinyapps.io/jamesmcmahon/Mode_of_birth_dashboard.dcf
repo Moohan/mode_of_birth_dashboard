@@ -1,0 +1,12 @@
+name: Mode_of_birth_dashboard
+title: Mode_of_birth_dashboard
+username:
+account: jamesmcmahon
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 951548
+bundleId: 2112085
+url: https://jamesmcmahon.shinyapps.io/Mode_of_birth_dashboard/
+when: 1558992808.86707
+asMultiple: FALSE
+asStatic: FALSE
