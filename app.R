@@ -8,8 +8,11 @@
 #
 
 library(shiny)
+library(readr)
+library(dplyr)
+library(ggplot2)
 
-source("code.R")
+data <- read_rds("data.rds")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(# Show a plot of the generated distribution
@@ -67,11 +70,13 @@ server <- function(input, output) {
       ggplot(HB_data,
              aes(x =  financial_year, y = rate_per_100_deliveries))
     
-    plot + xlab("Financial Year") + ylab("Rate per 100 live births") +
+    plot <- plot + xlab("Financial Year") + ylab("Rate per 100 live births") +
       geom_line(aes(group = hb2014, colour = hb2014), size = 1) +
       labs(colour = "Health Board") + 
       theme_minimal() + 
       scale_colour_brewer(palette = "Accent")
+    
+    plot  
   })
 }
 
