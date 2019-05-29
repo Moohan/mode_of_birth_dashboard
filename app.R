@@ -34,10 +34,10 @@ ui <- fluidPage(# Show a plot of the generated distribution
     selectInput(
       "hb",
       "Health Board(s)",
-      c("Scotland", distinct(data, hb2014)),
-      selected = "Scotland",
+      distinct(data, hb2014),
       multiple = TRUE
     ),
+    checkboxInput("scotland_check", label = "Show Scotland trend", value = TRUE),
     plotOutput("linePlot")
   ))
 
@@ -64,19 +64,31 @@ server <- function(input, output) {
       ungroup() %>%
       mutate(rate_per_100_deliveries = (selected_mode / all) * 100)
     
-    HB_data <- HB_data %>% bind_rows(Scotland_data)
+    #HB_data <- HB_data %>% bind_rows(Scotland_data)
     
     plot <-
       ggplot(HB_data,
              aes(x =  financial_year, y = rate_per_100_deliveries))
     
-    plot <- plot + xlab("Financial Year") + ylab("Rate per 100 live births") +
+    plot <-
+      plot + xlab("Financial Year") + ylab("Rate per 100 live births") +
       geom_line(aes(group = hb2014, colour = hb2014), size = 1) +
-      labs(colour = "Health Board") + 
-      theme_minimal() + 
+      labs(colour = "Health Board") +
+      # Make the x labs be angled so they don't overlap
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
       scale_colour_brewer(palette = "Accent")
     
-    plot  
+    if (input$scotland_check) {
+      plot <-
+        plot + geom_line(
+          data = Scotland_data,
+          colour = "black",
+          aes(group = hb2014),
+          size = 1
+        )
+    }
+    
+    plot
   })
 }
 
