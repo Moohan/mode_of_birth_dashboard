@@ -1,6 +1,6 @@
-library(readr)
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
+library(janitor)
+library(tidylog)
 
 data <-
   read_csv(
@@ -11,17 +11,19 @@ ca_names <-
   read_csv(
     "https://www.opendata.nhs.scot/dataset/9f942fdb-e59e-44f5-b534-d6e17229cc7b/resource/967937c4-8d67-4f39-974f-fd58c4acfda5/download/geography_codes_and_labels_ca2011_01042019.csv"
   ) %>%
-  janitor::clean_names() %>%
+  clean_names() %>%
   group_by(ca2011) %>%
-  summarise(hb2014 = first(hb2014name)) %>%
+  summarise(
+    council = first(ca2011name),
+    health_board = first(hb2014name)
+  ) %>%
   ungroup()
 
 data <- data %>%
-  janitor::clean_names() %>%
-  select(-simd_quintile_qf, -simd_version) %>% 
+  clean_names() %>%
+  select(-simd_quintile_qf, -simd_version) %>%
   filter(ca2011 != "RA2704") %>%
   left_join(ca_names, by = "ca2011")
-  
+
 
 write_rds(data, "data.rds")
-
